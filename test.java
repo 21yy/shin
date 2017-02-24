@@ -91,7 +91,7 @@ public class test {
         }
 
     }
-    public static int gcd(int a,int b) {        //辗转相除法
+    public static int gcd(int a,int b) {        //辗转相除
         int k=0;
         do {
             k=a%b;
