@@ -1,5 +1,6 @@
 import java.util.Random;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Created by XXXX on 2017/2/17.
@@ -11,9 +12,8 @@ public class test {
         int i = 0, count = 0,a1,a2,b1,b2;
         String result="";
         System.out.print("请输入题数:");
-        Scanner in = new Scanner(System.in);
         Random random = new Random();
-        num = in.nextInt();
+        num = Integer.parseInt(input(0));//输入题数
         for (i=0;i<num;i++){
             a2=Math.abs(random.nextInt()%29)+1;// 分母1
             b2=Math.abs(random.nextInt()%29)+1;//分母2
@@ -28,17 +28,56 @@ public class test {
             char s = symbol[random.nextInt(4)];
             if (b1==0)
                 s = symbol[random.nextInt(3)];
+
+            int divisor = gcd(a1,a2);
+            if (divisor>1){
+                a1 = a1/divisor;
+                a2 = a2/divisor;
+            }
+            divisor = gcd(b1,b2);
+            if(divisor>1){
+                b1 = b1/divisor;
+                b2 = b2/divisor;
+            }
             print(a1,a2,b1,b2,s);
 
             //a1=6;a2=7;b1=1;b2=4;s='-';
             result = calculate(a1,a2,b1,b2,s);//计算正确答案
             //System.out.print(result);
-            String ans = in.next();//答案输入
+            String ans = input(1);//答案输入
             if(check(ans,result)){
+                System.out.println("Correct");
                 count++;
             }
+            else
+                System.out.println("Wrong");
         }
         System.out.println("正确率:"+count +"/"+ num);
+
+    }
+    public static String input(int n){
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String num;
+        while(true){
+            try{
+                num = br.readLine();
+                switch(n){
+                    case 0:Integer a = Integer.valueOf(num);
+                            while(a<=0){
+                                System.out.print("请输入大于0的整数");
+                                num = br.readLine();
+                                a = Integer.valueOf(num);
+                            }
+                            break;
+                    case 1:return num;
+                }
+
+                return num;
+
+            }catch(Exception e){
+                System.out.println("请重新输入");
+            }
+        }
 
     }
     public static String calculate(int a1,int a2,int b1,int b2,char s){
@@ -103,9 +142,10 @@ public class test {
     }
     public static boolean check(String ans,String result){      //答案判断
         String[] res_ar=result.split("/");
+        ans = ans.replace(" ","");
         if (ans.contains("/")){
             String[] ans_ar=ans.split("/");
-            if (res_ar[1].equals("0"))
+            if (ans_ar[1].equals("0"))
                 return false;
             int m=gcd(Integer.parseInt(ans_ar[0]),Integer.parseInt(ans_ar[1]));
             ans=Integer.parseInt(ans_ar[0])/m+"/"+Integer.parseInt(ans_ar[1])/m;
