@@ -28,7 +28,7 @@ public class test {
             b2 = Integer.parseInt(number[4]);
             s = number[2];
             print(a1,a2,b1,b2,s);
-            //a1=6;a2=7;b1=1;b2=4;s='-';
+            //a1=5;a2=7;b1=7;b2=17;s="-";
             result = calculate(a1,a2,b1,b2,s);//计算正确答案
             //System.out.print(result);
             String ans = input(1);//答案输入
@@ -227,10 +227,65 @@ public class test {
         a=Math.abs(a);
         return a;
     }
-    public static boolean check(String ans,String result){      //答案判断
+    public static boolean isPrime(int n)
+    {
+        while(n!=1){
+            if (n%5==0){
+                isPrime(n/5);
+                return true;
+            }
+            else if (n%2==0){
+                isPrime(n/2);
+                return true;
+            }
+
+            else
+                return false;
+        }
+        return true;
+    }
+    public static boolean check(String ans,String result){
+        String res_array[] = result.split("/");
+        Double answer,res;
+        if (!ans.contains("."))
+            return FractionCheck(ans,result);
+        ans = ans.replace(" ","");
+        res = Double.parseDouble(res_array[0])/Double.parseDouble(res_array[1]);
+        String resStr = res.toString();     //计算出的小数答案string
+       try{
+           answer = Double.parseDouble(ans);        //若成功转换为double
+           if (isPrime(Integer.parseInt(res_array[1]))){        //判断分母是否由2,5组成
+                if(resStr.compareTo(ans)==0){
+                    return true;
+                }
+           }
+           else if (resStr.length()>ans.length()){        //若计算的答案比输入的长         先将计算出的答案四舍五入到和输入同长度在对比
+               resStr = resStr.substring(0,ans.length()+1);
+               if (resStr.charAt(ans.length())>='5'){
+                    if (resStr.charAt(ans.length())=='9'){
+                        resStr = resStr.substring(0,ans.length()-2)+(char)((int)resStr.charAt(ans.length()-2)+1)+'0';
+                    }
+                    else{
+                        resStr = resStr.substring(0,ans.length()-1)+(char)((int)resStr.charAt(ans.length()-1)+1);
+                    }
+               }
+               else{
+                    resStr = resStr.substring(0,resStr.length()-1);
+               }
+
+           }
+           if(resStr.compareTo(ans)==0){
+               return true;
+           }
+       }catch (Exception e){
+           FractionCheck(ans,result);
+       }
+        return false;
+    }
+    public static boolean FractionCheck(String ans,String result){      //答案判断
         String[] res_ar=result.split("/");
         ans = ans.replace(" ","");
-        if (ans.contains("/")){
+        /*if (ans.contains("/")){*/try{
             String[] ans_ar=ans.split("/");
             if (ans_ar[1].equals("0"))
                 return false;
@@ -242,6 +297,8 @@ public class test {
             else if (res_ar[0].equals("0")&&ans_ar[0].equals("0")){
                 return true;
             }
+        }catch(Exception e){
+            return false;
         }
         if (ans.equals(result))
             return true;
