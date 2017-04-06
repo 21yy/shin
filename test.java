@@ -9,7 +9,7 @@ public class test {
 
         String []quiz = new String[4];
         int num = 0;
-        int i = 0, count = 0,a1=0,a2=0,b1=0,b2=0;
+        int i = 0, count = 0,numerator1=0,denominator1=0,numerator2=0,denominator2=0;
         String s="";
         String result;
         result = "";
@@ -22,14 +22,14 @@ public class test {
                 str = ProduceQuiz();
             }
             String []number = str.split(",");
-            a1 = Integer.parseInt(number[0]);
-            a2 = Integer.parseInt(number[1]);
-            b1 = Integer.parseInt(number[3]);
-            b2 = Integer.parseInt(number[4]);
+            numerator1 = Integer.parseInt(number[0]);
+            denominator1 = Integer.parseInt(number[1]);
+            numerator2 = Integer.parseInt(number[3]);
+            denominator2 = Integer.parseInt(number[4]);
             s = number[2];
-            print(a1,a2,b1,b2,s);
+            print(numerator1,denominator1,numerator2,denominator2,s);
             //a1=7;a2=8;b1=1;b2=4;s="*";
-            result = calculate(a1,a2,b1,b2,s);//计算正确答案
+            result = calculate(numerator1,denominator1,numerator2,denominator2,s);//计算正确答案
             //System.out.print(result);
             String ans = input(1);//答案输入
             if(check(ans,result)){
@@ -114,33 +114,33 @@ public class test {
         }
     public  static String  ProduceQuiz(){
         char[] symbol = {'+','-','*','/'};
-        int a1,a2,b1,b2;
+        int numerator1,denominator1,numerator2,denominator2;
         char s;
         Random random = new Random();
-        a2=Math.abs(random.nextInt()%29)+1;// 分母1
-        b2=Math.abs(random.nextInt()%29)+1;//分母2
-        a1=Math.abs(random.nextInt()%29)+1;
-        b1=Math.abs(random.nextInt()%29)+1;
-        if (a2!=1&&a1>a2){
-            a1=Math.abs(random.nextInt()%(a2-1)+1);
+        denominator1=Math.abs(random.nextInt()%29)+1;// 分母1
+        denominator2=Math.abs(random.nextInt()%29)+1;//分母2
+        numerator1=Math.abs(random.nextInt()%29)+1;
+        numerator2=Math.abs(random.nextInt()%29)+1;
+        if (denominator1!=1&&numerator1>denominator1){
+            numerator1=Math.abs(random.nextInt()%(denominator1-1)+1);
         }
-        if (b2!=1&&b1>b2){
-            b1=Math.abs(random.nextInt()%(b2-1)+1);
+        if (denominator2!=1&&numerator2>denominator2){
+            numerator2=Math.abs(random.nextInt()%(denominator2-1)+1);
         }
         s = symbol[random.nextInt(4)];
-        if (b1==0)
+        if (numerator2==0)
             s = symbol[random.nextInt(3)];
-        int divisor = gcd(a1,a2);   // 求分子分母间最大公约数
+        int divisor = gcd(numerator1,denominator1);   // 求分子分母间最大公约数
         if (divisor>1){
-            a1 = a1/divisor;
-            a2 = a2/divisor;
+            numerator1 = numerator1/divisor;
+            denominator1 = denominator1/divisor;
         }
-        divisor = gcd(b1,b2);
+        divisor = gcd(numerator2,denominator2);
         if(divisor>1){
-            b1 = b1/divisor;
-            b2 = b2/divisor;
+            numerator2 = numerator2/divisor;
+            denominator2 = denominator2/divisor;
         }//题目分数化简
-        return a1 +","+a2+","+s+","+b1+","+b2;
+        return numerator1 +","+denominator1+","+s+","+numerator2+","+denominator2;
     }
     public static String input(int n){              //题数及答案输入
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -167,50 +167,50 @@ public class test {
         }
 
     }
-    public static String calculate(int a1,int a2,int b1,int b2,String s){         //题目答案计算
+    public static String calculate(int numerator1,int denominator1,int numerator2,int denominator2,String s){         //题目答案计算
         String result="";
         int max;
         if(s.equals("*")){
-            max=gcd(a1*b1,a2*b2);
-            result = a1*b1/max+ "/" + a2*b2/max;
+            max=gcd(numerator1*numerator2,denominator1*denominator2);
+            result = numerator1*numerator2/max+ "/" + denominator1*denominator2/max;
         }
         else{
-            int c1=a1*b2,c2=a2*b1;
+            int c1=numerator1*denominator2,c2=denominator1*numerator2;
             switch(s){
-                case "+":  max=gcd(c1+c2,a2*b2);
-                            result= (c1+c2)/max + "/" + a2*b2/max; break;
-                case "-":  max=gcd(c1-c2,a2*b2);
-                            result = (c1-c2)/max + "/" + a2*b2/max; break;
+                case "+":  max=gcd(c1+c2,denominator1*denominator2);
+                            result= (c1+c2)/max + "/" + denominator1*denominator2/max; break;
+                case "-":  max=gcd(c1-c2,denominator1*denominator2);
+                            result = (c1-c2)/max + "/" + denominator1*denominator2/max; break;
                 case "/":max=gcd(c1,c2);result = c1/max+ "/" +c2/max; break;
             }
         }
         return result;
     }
-    public static void print(int a1,int a2,int b1,int b2,String s){       //算术题输出
-        if (a1%a2==0){
-            System.out.print(a1/a2+" "+s+" ");
+    public static void print(int numerator1,int denominator1,int numerator2,int denominator2,String s){       //算术题输出
+        if (numerator1%denominator1==0){
+            System.out.print(numerator1/denominator1+" "+s+" ");
         }
         else{
-            if (a1==0){
+            if (numerator1==0){
                 System.out.print(0);
             }
-            else System.out.print(a1);
-            if (a2!=1){
-                System.out.print("/"+a2+" "+s+" ");
+            else System.out.print(numerator1);
+            if (denominator1!=1){
+                System.out.print("/"+denominator1+" "+s+" ");
             }
             else
                 System.out.print(" "+s+" ");
         }
-        if (b1%b2==0){
-            System.out.print(b1/b2+" "+"= ");
+        if (numerator2%denominator2==0){
+            System.out.print(numerator2/denominator2+" "+"= ");
         }
         else{
-            if (b1==0){
+            if (numerator2==0){
                 System.out.print(0);
             }
-            else System.out.print(b1);
-            if (b2!=1){
-                System.out.print("/"+b2+" "+"= ");
+            else System.out.print(numerator2);
+            if (denominator2!=1){
+                System.out.print("/"+denominator2+" "+"= ");
             }
             else
                 System.out.print(" "+"= ");
